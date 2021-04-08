@@ -9,7 +9,7 @@ public abstract class Player {
 	protected int color;
 	protected Board board;
 
-	public abstract Move play();
+	public abstract void play();
 	
 	public int getColor(){
 		return this.color;

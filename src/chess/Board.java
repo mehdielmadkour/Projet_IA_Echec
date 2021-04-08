@@ -1,6 +1,5 @@
 package chess;
 
-import chess.Cell;
 import chess.player.Move;
 import chess.player.Player;
 import chess.piece.Bishop;
@@ -21,9 +20,10 @@ public class Board {
 				grid[j][i] = new Cell(j, i);
 			}
 		}
+		setupChessBoard();
 	}
 
-	public void setupChessBoard() {
+	private void setupChessBoard() {
 
 		for (int x = 0; x < SIZE; x++) {
 			grid[x][1].setPiece(new Pawn(Player.WHITE));
@@ -52,6 +52,10 @@ public class Board {
 	}
 
 	public void movePiece(Move move) {
+		System.out.println(move.xStart);
+		System.out.println(move.yStart);
+		System.out.println(move.xEnd);
+		System.out.println(move.yEnd);
 		grid[move.xEnd][move.yEnd].setPiece(grid[move.xStart][move.yStart].getPiece());
 		grid[move.xStart][move.yStart].release();
 	}

@@ -1,11 +1,9 @@
 package chess.player;
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.InputStreamReader;
 
 import chess.Board;
-import chess.player.Move;
 
 public class HumanPlayer extends Player {
 
@@ -15,8 +13,8 @@ public class HumanPlayer extends Player {
 	}
 
 	@Override
-	public Move play() {
-		Move move;
+	public void play() {
+		Move move = null;
 		
 		boolean legalMove = true;
 		do{
@@ -24,16 +22,15 @@ public class HumanPlayer extends Player {
 			try {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 				String moveStr = new String(reader.readLine());
-				char[] moveChar = moveStr.toCharArray(); 
-				
-				move = new Move(moveChar[0]-'a', moveChar[1]-'1', moveChar[2] - 'a', 	moveChar[3]-'1');
+				char[] moveChar = moveStr.toCharArray();
+				move = new Move(moveChar[0]-'a', moveChar[2]-'a', moveChar[1] - '1', 	moveChar[3]-'1');
 			}
 			catch (Exception e) {
-				return null;
+				System.out.println(e);
 			}
 		}
 		while(!legalMove);
-		return move;
+		this.board.movePiece(move);
 	}
 
 }

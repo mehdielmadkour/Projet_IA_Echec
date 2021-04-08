@@ -12,7 +12,6 @@ public class Chess {
 	public Chess() {
 
 		board = new Board();
-		board.setupChessBoard();
 
 	}
 

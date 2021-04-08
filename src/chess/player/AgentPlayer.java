@@ -10,9 +10,8 @@ public class AgentPlayer extends Player {
 	}
 	
 	@Override
-	public Move play() {
+	public void play() {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
