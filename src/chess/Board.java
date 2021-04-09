@@ -5,10 +5,12 @@ import chess.player.Player;
 import java.util.ArrayList;
 
 import chess.move.Move;
+import chess.move.Validator;
 import chess.piece.Bishop;
 import chess.piece.King;
 import chess.piece.Knight;
 import chess.piece.Pawn;
+import chess.piece.Piece;
 import chess.piece.Queen;
 import chess.piece.Rook;
 

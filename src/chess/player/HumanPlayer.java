@@ -2,6 +2,7 @@ package chess.player;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import chess.Board;
 import chess.move.Move;
@@ -15,7 +16,11 @@ public class HumanPlayer extends Player {
 	}
 
 	@Override
-	public void play() {
+	public boolean play() {
+		
+		ArrayList<Move> possibleMoves = getPossibleMoves();
+		if (possibleMoves.size() == 0) return false;
+		
 		Move move = null;
 		
 		do{
@@ -32,6 +37,8 @@ public class HumanPlayer extends Player {
 		}
 		while(!Validator.validateMove(move, this));
 		this.board.movePiece(move);
+		
+		return true;
 	}
 
 }

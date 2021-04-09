@@ -20,36 +20,17 @@ public class AgentPlayer extends Player {
 	}
 	
 	@Override
-	public void play() {
+	public boolean play() {
 		
 		ArrayList<Move> possibleMoves = getPossibleMoves();
+		if (possibleMoves.size() == 0) return false;
 		
 		Random rand = new Random();
 		int n = rand.nextInt(possibleMoves.size());
 		
 		this.board.movePiece(possibleMoves.get(n));
 		
-	}
-	
-	private ArrayList<Move> getPossibleMoves(){
-
-		ArrayList<Move> possibleMoves = new ArrayList<>();
-		
-		ArrayList<int[]> playerPositions = board.getPlayerPositions(this.color);
-		
-		for (int[] position : playerPositions) {
-			
-			Piece piece = board.getGrid()[position[0]][position[1]].getPiece();
-			
-			for (int x = 0; x < board.SIZE; x++)
-				for (int y = 0; y < board.SIZE; y++) {
-					Move move = new Move(position[0], x, position[1], y);
-					if (Validator.validateMove(move, this))
-						possibleMoves.add(move);
-				}
-		}
-		
-		return possibleMoves;
+		return true;
 	}
 
 }

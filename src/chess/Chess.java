@@ -31,9 +31,9 @@ public class Chess {
 
 		while (true){
 			board.print();
-			human.play();
+			if (!human.play()) break;
 			board.print();
-			agent.play();				
+			if (!agent.play()) break;				
 		}
 	}
 	

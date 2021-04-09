@@ -1,5 +1,7 @@
 package chess.piece;
 
+import chess.player.Player;
+
 public abstract class Piece {
 	protected int player;
     
@@ -23,12 +25,12 @@ public abstract class Piece {
     
     @Override
 	public Object clone() { 
-		try{
-			return super.clone();
-		}
-		catch (CloneNotSupportedException e){
-			System.out.println(e);
-		}
+    	if (this instanceof Pawn) return new Pawn(this.player);
+		if (this instanceof Knight) return new Knight(this.player);
+		if (this instanceof Bishop) return new Bishop(this.player);
+		if (this instanceof Rook) return new Rook(this.player);
+		if (this instanceof Queen) return new Queen(this.player);
+		if (this instanceof King) return new King(this.player);
 		return null;
 	}
 }
