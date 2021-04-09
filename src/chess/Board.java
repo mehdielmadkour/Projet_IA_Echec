@@ -54,10 +54,6 @@ public class Board {
 	}
 
 	public void movePiece(Move move) {
-		System.out.println(move.xStart);
-		System.out.println(move.yStart);
-		System.out.println(move.xEnd);
-		System.out.println(move.yEnd);
 		grid[move.xEnd][move.yEnd].setPiece(grid[move.xStart][move.yStart].getPiece());
 		grid[move.xStart][move.yStart].release();
 	}

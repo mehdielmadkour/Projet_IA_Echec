@@ -14,7 +14,10 @@ public class Move {
 	}
 
 	public String toString() {
-		return (char)('a' + xStart) + "" + yStart + (char)('a' + xEnd) + "" + yEnd;
+		return String.format("%s%s %s%s", String.valueOf((char) (xStart + 'a')), 
+				String.valueOf((char) (yStart + '1')), 
+				String.valueOf((char) (xEnd + 'a')), 
+				String.valueOf((char) (yEnd + '1')));
 	}
 
 }
