@@ -1,9 +1,14 @@
 package chess;
 
+import java.awt.Dimension;
+
+import javax.swing.JFrame;
+
 import chess.Board;
 import chess.player.AgentPlayer;
 import chess.player.HumanPlayer;
 import chess.player.Player;
+import chess.ui.UI;
 
 public class Chess {
 
@@ -11,7 +16,8 @@ public class Chess {
 
 	public Chess() {
 
-		board = new Board();
+		UI ui = new UI();
+		board = new Board(ui);
 
 	}
 
