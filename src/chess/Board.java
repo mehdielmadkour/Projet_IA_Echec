@@ -85,23 +85,6 @@ public class Board {
 	public Cell[][] getGrid() {
 		return grid;
 	}
-	
-	public ArrayList<int[]> getPlayerPositions(int player){
-
-		ArrayList<int[]> playerPositions = new ArrayList<>();
-		
-		for (int x = 0; x < SIZE; x++)
-			for (int y = 0; y < SIZE; y++)
-				if (grid[x][y].isOccupied())
-					if (grid[x][y].getPiece().getPlayer() == player) {
-						int[] position = new int[2];
-						position[0] = x;
-						position[1] = y;
-						playerPositions.add(position);
-					}
-		
-		return playerPositions;
-	}
 
 	public String toString() {
 		String s = "";
@@ -130,5 +113,20 @@ public class Board {
 
 	public void print() {
 		System.out.println(this.toString());
+	}
+	
+	public Cell[][] copyGrid(){
+		
+		Cell[][] copy = new Cell[SIZE][SIZE];
+		
+		for (int x = 0; x < grid.length; x++)
+			for (int y = 0; y < grid.length; y++) {
+				copy[x][y] = new Cell(x, y);
+				if (grid[x][y].isOccupied()) {
+					copy[x][y].setPiece((Piece) grid[x][y].getPiece().clone());
+				}
+			}
+		
+		return copy;
 	}
 }

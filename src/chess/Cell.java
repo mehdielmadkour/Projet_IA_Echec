@@ -21,7 +21,7 @@ public class Cell {
 	}
 
 	public boolean isOccupied() {
-		return isOccupied;
+		return piece != null;
 	}
 
 	public void setPiece(Piece piece) {

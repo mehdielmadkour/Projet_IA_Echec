@@ -14,28 +14,27 @@ import chess.piece.Rook;
 
 public class Validator {
 
-	public static boolean validateMove(Move move, Player player) {
-
-		Cell[][] grid = player.getBoard().getGrid();
+	public static boolean validateMove(Move move, int player, Cell[][] grid) {
 		
-		return isPossible(move, player.getColor(), grid) && !wouldBeCheck(player,move);
+		if (isPossible(move, player, grid)) 
+			if (!wouldBeCheck(player, move, grid))
+				return true;
+		return false;
 	}
 
 	public static boolean isPossible(Move move, int player, Cell[][] grid) {
 		
 		// verification des conditions
-		if (isPlayerPiece(grid, move, player) 
-				&& isOnBoard(move)
-				&& cellIsAvailable(grid, move) 
-				&& canMove(grid, move)
-				&& !passOverAPiece(grid, move)) {
-			
-			// valide le coup
-			return true;
-		}
-		else {
-			return false;
-		}
+		if (isPlayerPiece(grid, move, player))
+			if (isOnBoard(move))
+				if (cellIsAvailable(grid, move))
+					if (canMove(grid, move))
+						if(!passOverAPiece(grid, move)) {
+							// valide le coup
+							return true;
+						}
+
+		return false;
 	}
 	
 	// la position initiale contient une piece appartenant au joueur
@@ -108,8 +107,9 @@ public class Validator {
 				return grid[move.xEnd][move.yEnd].getPiece().getPlayer() == Player.BLACK;
 		
 		// avance d'une case ou de deux case au premier deplacement
-		return move.xEnd == move.xStart && move.yEnd - move.yStart == 1
-				|| move.xEnd == move.xStart && move.yStart == 1 && move.yEnd == 3;
+		return (move.xEnd == move.xStart && move.yEnd - move.yStart == 1
+				|| move.xEnd == move.xStart && move.yStart == 1 && move.yEnd == 3)
+				&& !grid[move.xEnd][move.yEnd].isOccupied();
 	}
 	
 	private static boolean blackPawnCanMove(Cell[][] grid, Move move) {
@@ -120,8 +120,9 @@ public class Validator {
 				return grid[move.xEnd][move.yEnd].getPiece().getPlayer() == Player.WHITE;
 		
 		// avance d'une case ou de deux case au premier deplacement
-		return move.xEnd == move.xStart && move.yEnd - move.yStart == -1
-				|| move.xEnd == move.xStart && move.yStart == 6 && move.yEnd == 4;
+		return (move.xEnd == move.xStart && move.yEnd - move.yStart == -1
+				|| move.xEnd == move.xStart && move.yStart == 6 && move.yEnd == 4)
+				&& !grid[move.xEnd][move.yEnd].isOccupied();
 	}
 	
 	private static boolean queenCanMove(Move move) {
@@ -246,47 +247,88 @@ public class Validator {
 		return path;
 	}
 	
-	private static boolean wouldBeCheck(Player player, Move move) {
+	private static boolean wouldBeCheck(int player, Move move, Cell[][] grid) {
 		
-		Board board = player.getBoard();
-		Cell[][] grid = board.getGrid();
-		Cell[][] copy = new Cell[grid.length][grid.length];
-		
-		for (int x = 0; x < grid.length; x++)
-			for (int y = 0; y < grid.length; y++) {
-				
-				copy[x][y] = new Cell(x, y);
-				if (grid[x][y].isOccupied()) {
-					copy[x][y].setPiece((Piece) grid[x][y].getPiece().clone());
-				}
-			}
-		
-		copy[move.xEnd][move.yEnd].setPiece(copy[move.xStart][move.yStart].getPiece());
-		copy[move.xStart][move.yStart].release();
+		grid[move.xEnd][move.yEnd].setPiece(grid[move.xStart][move.yStart].getPiece());
+		grid[move.xStart][move.yStart].release();
 
 		int[] kingPosition = new int[2];
 		for (int x = 0; x < grid.length; x++)
 			for (int y = 0; y < grid.length; y++)
-				if (copy[x][y].isOccupied()) 
-					if (copy[x][y].getPiece().getPlayer() == player.getColor() && copy[x][y].getPiece() instanceof King) {
+				if (grid[x][y].isOccupied()) 
+					if (grid[x][y].getPiece().getPlayer() == player && grid[x][y].getPiece() instanceof King) {
 						kingPosition[0] = x;
 						kingPosition[1] = y;
 					}
 		
 		int color;
 		
-		if (player.getColor() == Player.WHITE) color = Player.BLACK;
+		if (player == Player.WHITE) color = Player.BLACK;
 		else color = Player.WHITE;
 		
-		ArrayList<int[]> positions = board.getPlayerPositions(color);
+		ArrayList<int[]> positions = getPlayerPositions(color, grid);
 		
 		for (int[] position : positions) {
 			
 			Move nextMove = new Move(position[0], kingPosition[0], position[1], kingPosition[1]);
 			
-			if (isPossible(nextMove, color, copy)) return true;
+			if (isPossible(nextMove, color, grid)) return true;
 		}
 		
 		return false;
+	}
+	
+	public static ArrayList<int[]> getPlayerPositions(int player, Cell[][] grid){
+
+		ArrayList<int[]> playerPositions = new ArrayList<>();
+		
+		for (int x = 0; x < 8; x++)
+			for (int y = 0; y < 8; y++)
+				if (grid[x][y].isOccupied())
+					if (grid[x][y].getPiece().getPlayer() == player) {
+						int[] position = new int[2];
+						position[0] = x;
+						position[1] = y;
+						playerPositions.add(position);
+					}
+		
+		return playerPositions;
+	}
+	
+	public static ArrayList<Move> getPossibleMoves(Cell[][] grid, int player){
+
+		ArrayList<Move> possibleMoves = new ArrayList<>();
+		
+		ArrayList<int[]> playerPositions = getPlayerPositions(player, grid);
+		
+		for (int[] position : playerPositions) {
+			
+			Piece piece = grid[position[0]][position[1]].getPiece();
+			
+			for (int x = 0; x < 8; x++)
+				for (int y = 0; y < 8; y++) {
+					Move move = new Move(position[0], x, position[1], y);
+					if (validateMove(move, player, copyGrid(grid))) {
+						possibleMoves.add(move);
+					}
+				}
+		}
+		
+		return possibleMoves;
+	}
+	
+	private static Cell[][] copyGrid(Cell[][] grid){
+		
+		Cell[][] copy = new Cell[grid.length][grid.length];
+		
+		for (int x = 0; x < grid.length; x++)
+			for (int y = 0; y < grid.length; y++) {
+				copy[x][y] = new Cell(x, y);
+				if (grid[x][y].isOccupied()) {
+					copy[x][y].setPiece((Piece) grid[x][y].getPiece().clone());
+				}
+			}
+		
+		return copy;
 	}
 }

@@ -3,6 +3,7 @@ package chess.ia;
 import java.util.ArrayList;
 
 import chess.Board;
+import chess.Cell;
 import chess.move.Move;
 import chess.move.Validator;
 import chess.piece.Bishop;
@@ -36,15 +37,15 @@ public class Evaluator {
 		
 	}
 	
-	public int evaluate(Board board, int player) {
+	public int evaluate(Cell[][] grid, int player) {
 		
 		int score = 0;
 		
-		ArrayList<int[]> playerPositions = board.getPlayerPositions(player);
+		ArrayList<int[]> playerPositions = Validator.getPlayerPositions(player, grid);
 		
 		for (int[] position : playerPositions) {
 			
-			Piece piece = board.getGrid()[position[0]][position[1]].getPiece();
+			Piece piece = grid[position[0]][position[1]].getPiece();
 			
 			if (piece instanceof Pawn) score += values[0];
 			if (piece instanceof Knight) score += values[1];
@@ -58,10 +59,10 @@ public class Evaluator {
 		return score;
 	}
 	
-	public int evaluate(Board board) {
+	public int evaluate(Cell[][] grid) {
 		
-		int playerScore = evaluate(board, player);
-		int agentScore = evaluate(board, agent);
+		int playerScore = evaluate(grid, player);
+		int agentScore = evaluate(grid, agent);
 		
 		return agentScore - playerScore;
 	}

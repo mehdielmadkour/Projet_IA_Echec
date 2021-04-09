@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import chess.Board;
+import chess.ia.Evaluator;
 import chess.move.Move;
 import chess.move.Validator;
 
@@ -13,13 +14,14 @@ public class HumanPlayer extends Player {
 	public HumanPlayer(int color, Board board){
 		setColor(color);
 		this.board = board;
+		evaluator = new Evaluator(this.color);
 	}
 
 	@Override
 	public boolean play() {
 		
-		ArrayList<Move> possibleMoves = getPossibleMoves();
-		if (possibleMoves.size() == 0) return false;
+		//ArrayList<Move> possibleMoves = getPossibleMoves();
+		//if (possibleMoves.size() == 0) return false;
 		
 		Move move = null;
 		
@@ -35,7 +37,7 @@ public class HumanPlayer extends Player {
 				System.out.println(e);
 			}
 		}
-		while(!Validator.validateMove(move, this));
+		while(!Validator.validateMove(move, this.color, board.copyGrid()));
 		this.board.movePiece(move);
 		
 		return true;

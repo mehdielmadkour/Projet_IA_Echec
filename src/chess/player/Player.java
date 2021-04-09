@@ -3,6 +3,8 @@ package chess.player;
 import java.util.ArrayList;
 
 import chess.Board;
+import chess.Cell;
+import chess.ia.Evaluator;
 import chess.move.Move;
 import chess.move.Validator;
 import chess.piece.Piece;
@@ -13,6 +15,7 @@ public abstract class Player {
 	
 	protected int color;
 	protected Board board;
+	public Evaluator evaluator;
 
 	public abstract boolean play();
 	
@@ -29,19 +32,19 @@ public abstract class Player {
 	protected ArrayList<Move> getPossibleMoves(){
 
 		ArrayList<Move> possibleMoves = new ArrayList<>();
+		Cell[][] grid = board.copyGrid();
 		
-		ArrayList<int[]> playerPositions = board.getPlayerPositions(this.color);
+		ArrayList<int[]> playerPositions = Validator.getPlayerPositions(this.color, board.copyGrid());
 		
 		for (int[] position : playerPositions) {
 			
-			Piece piece = board.getGrid()[position[0]][position[1]].getPiece();
+			Piece piece = grid[position[0]][position[1]].getPiece();
 			
 			for (int x = 0; x < board.SIZE; x++)
 				for (int y = 0; y < board.SIZE; y++) {
 					Move move = new Move(position[0], x, position[1], y);
-					if (Validator.validateMove(move, this)) {
+					if (Validator.validateMove(move, this.color, grid)) {
 						possibleMoves.add(move);
-						System.out.println(move.toString());
 					}
 				}
 		}
