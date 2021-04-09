@@ -1,4 +1,4 @@
-package chess.player;
+package chess.move;
 
 public class Move {
 	public int xStart;

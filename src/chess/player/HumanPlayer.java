@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import chess.Board;
+import chess.move.Move;
+import chess.move.Validator;
 
 public class HumanPlayer extends Player {
 
@@ -16,7 +18,6 @@ public class HumanPlayer extends Player {
 	public void play() {
 		Move move = null;
 		
-		boolean legalMove = true;
 		do{
 			System.out.println("Votre coup? <e2e4> ");
 			try {
@@ -29,7 +30,7 @@ public class HumanPlayer extends Player {
 				System.out.println(e);
 			}
 		}
-		while(!legalMove);
+		while(!Validator.validateMove(move, this));
 		this.board.movePiece(move);
 	}
 

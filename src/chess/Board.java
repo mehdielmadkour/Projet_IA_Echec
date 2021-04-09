@@ -1,7 +1,9 @@
 package chess;
 
-import chess.player.Move;
+import java.util.ArrayList;
+
 import chess.player.Player;
+import chess.move.Move;
 import chess.piece.Bishop;
 import chess.piece.King;
 import chess.piece.Knight;
