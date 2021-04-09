@@ -17,17 +17,18 @@ import chess.player.Player;
 
 public class Evaluator {
 
-	private int[] values = new int[6];
+	private int[] values = new int[7];
 	private int player;
 	private int agent;
 	
 	public Evaluator(int color) {
-		values[0] = 1; // pawn
-		values[1] = 3; // knight
-		values[2] = 3; // bishop
-		values[3] = 5; // rook
-		values[4] = 10; // queen
+		values[0] = 10; // pawn
+		values[1] = 30; // knight
+		values[2] = 30; // bishop
+		values[3] = 50; // rook
+		values[4] = 100; // queen
 		values[5] = Integer.MAX_VALUE; // king
+		values[6] = 1; // coups possible
 		
 		this.agent = color;
 		
@@ -55,6 +56,9 @@ public class Evaluator {
 			if (piece instanceof King) score += values[5];
 			
 		}
+		
+		//ArrayList<Move> possibleMoves = Validator.getPossibleMoves(grid, player); 
+		//score += values[6] * possibleMoves.size();
 		
 		return score;
 	}

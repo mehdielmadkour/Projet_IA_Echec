@@ -1,6 +1,7 @@
 package chess.ia;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import chess.Cell;
 import chess.move.Move;
@@ -16,29 +17,41 @@ public class Minimax {
 	
 	public static Move getNextMove(Player player) {
 		
+		System.out.println("Calcule en cours");
 		evaluator = player.evaluator;
 		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(player.getBoard().copyGrid(), player.getColor());
 		
 		Move move = null;
 		int value = Integer.MIN_VALUE;
 		
-		for (Move possibleMove : possibleMoves) {
+		int nextPlayer;
+		if (agentColor == Player.WHITE) nextPlayer = Player.BLACK;
+		else nextPlayer = Player.WHITE;
+		
+		ArrayList<Move> bestMoves = new ArrayList<>();
+		
+		for (Move nextMove : possibleMoves) {
 			
-			Cell[][] copy = copyGrid(player.getBoard().getGrid());
+			Cell[][] copy = play(player.getBoard().copyGrid(), nextMove);
 			
-			int nextPlayer;
-			if (agentColor == Player.WHITE) nextPlayer = Player.BLACK;
-			else nextPlayer = Player.WHITE;
+			int nextValue = minimax_alphaBeta(copy, 1, nextPlayer, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			
-			int possibleValue = minimax(copy, 1, nextPlayer);
+			System.out.println(nextMove.toString() + " " + nextValue);
 			
-			System.out.println(possibleMove.toString() + " " + value);
-			
-			if (possibleValue > value) {
-				value = possibleValue;
-				move = possibleMove;
+			if (nextValue == value) {
+				bestMoves.add(nextMove);
+			}
+			if (nextValue > value) {
+				bestMoves.clear();
+				bestMoves.add(nextMove);
+				value = nextValue;
 			}
 		}
+		
+		Random rand = new Random();
+		int n = rand.nextInt(bestMoves.size());
+		
+		move = bestMoves.get(n);
 		
 		return move;
 	}
@@ -58,16 +71,14 @@ public class Minimax {
 			
 			int value = Integer.MIN_VALUE;
 			
-			for (Move possibleMove : possibleMoves) {
+			for (Move nextMove : possibleMoves) {
 				
-				Cell[][] copy = copyGrid(grid);
-				copy[possibleMove.xEnd][possibleMove.yEnd].setPiece((Piece) copy[possibleMove.xStart][possibleMove.yStart].getPiece().clone());
-				copy[possibleMove.xStart][possibleMove.yStart].release();
+				Cell[][] nextGrid = play(grid, nextMove);
 				
-				int possibleValue = minimax(copy, depth + 1, nextPlayer);
+				int nextValue = minimax(nextGrid, depth + 1, nextPlayer);
 				
-				if (possibleValue > value) {
-					value = possibleValue;
+				if (nextValue > value) {
+					value = nextValue;
 				}
 			}
 			
@@ -77,21 +88,83 @@ public class Minimax {
 			
 			int value = Integer.MAX_VALUE;
 			
-			for (Move possibleMove : possibleMoves) {
+			for (Move nextMove : possibleMoves) {
 				
-				Cell[][] copy = copyGrid(grid);
-				copy[possibleMove.xEnd][possibleMove.yEnd].setPiece((Piece) copy[possibleMove.xStart][possibleMove.yStart].getPiece().clone());
-				copy[possibleMove.xStart][possibleMove.yStart].release();
+				Cell[][] nextGrid = play(grid, nextMove);
 				
-				int possibleValue = minimax(copy, depth + 1, nextPlayer);
+				int nextValue = minimax(nextGrid, depth + 1, nextPlayer);
 				
-				if (possibleValue < value) {
-					value = possibleValue;
+				if (nextValue < value) {
+					value = nextValue;
 				}
 			}
 			
 			return value;
 		}
+	}
+	
+	private static int minimax_alphaBeta(Cell[][] grid, int depth, int player, int alpha, int beta) {
+		
+		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(grid, player);
+		
+		if (depth == maxDepth || possibleMoves.size() == 0)
+			return evaluator.evaluate(grid);
+		
+		int nextPlayer;
+		if (player == Player.WHITE) nextPlayer = Player.BLACK;
+		else nextPlayer = Player.WHITE;
+		
+		if (agentColor == player) {
+			
+			int value = Integer.MIN_VALUE;
+			
+			for (Move nextMove : possibleMoves) {
+				
+				Cell[][] nextGrid = play(grid, nextMove);
+				
+				int nextValue = minimax_alphaBeta(nextGrid, depth + 1, nextPlayer, alpha, beta);
+				
+				if (nextValue > value) {
+					value = nextValue;
+				}
+				
+				if (value >= beta) return value;
+				
+				if (value > alpha) alpha = value;
+			}
+			
+			return value;
+		}
+		else {
+			
+			int value = Integer.MAX_VALUE;
+			
+			for (Move nextMove : possibleMoves) {
+				
+				Cell[][] nextGrid = play(grid, nextMove);
+				
+				int nextValue = minimax_alphaBeta(nextGrid, depth + 1, nextPlayer, alpha, beta);
+				
+				if (nextValue < value) {
+					value = nextValue;
+				}
+				
+				if (alpha >= value) return value;
+				
+				if (value < beta) beta = value;
+			}
+			
+			return value;
+		}
+	}
+	
+	private static Cell[][] play(Cell[][] grid, Move move){
+		
+		Cell[][] copy = copyGrid(grid);
+		copy[move.xEnd][move.yEnd].setPiece((Piece) copy[move.xStart][move.yStart].getPiece().clone());
+		copy[move.xStart][move.yStart].release();
+		
+		return copy;
 	}
 	
 	private static Cell[][] copyGrid(Cell[][] grid){
