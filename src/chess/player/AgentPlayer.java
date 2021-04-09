@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import chess.Board;
+import chess.ia.Evaluator;
 import chess.move.Move;
 import chess.move.Validator;
 import chess.piece.Piece;
 
 public class AgentPlayer extends Player {
+	
+	private Evaluator evaluator;
 
 	public AgentPlayer(int color, Board board){
 		setColor(color);
 		this.board = board;
+		evaluator = new Evaluator(this.color);
 	}
 	
 	@Override
@@ -31,7 +35,7 @@ public class AgentPlayer extends Player {
 
 		ArrayList<Move> possibleMoves = new ArrayList<>();
 		
-		ArrayList<int[]> playerPositions = getPositions();
+		ArrayList<int[]> playerPositions = board.getPlayerPositions(this.color);
 		
 		for (int[] position : playerPositions) {
 			
@@ -46,23 +50,6 @@ public class AgentPlayer extends Player {
 		}
 		
 		return possibleMoves;
-	}
-	
-	private ArrayList<int[]> getPositions(){
-
-		ArrayList<int[]> playerPositions = new ArrayList<>();
-		
-		for (int x = 0; x < board.SIZE; x++)
-			for (int y = 0; y < board.SIZE; y++)
-				if (board.getGrid()[x][y].isOccupied())
-					if (board.getGrid()[x][y].getPiece().getPlayer() == this.color) {
-						int[] position = new int[2];
-						position[0] = x;
-						position[1] = y;
-						playerPositions.add(position);
-					}
-		
-		return playerPositions;
 	}
 
 }

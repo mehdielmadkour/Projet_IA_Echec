@@ -1,4 +1,4 @@
-package chess.ui;
+package chess;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -45,7 +45,7 @@ public class UI {
 		for (int x = 0; x < SIZE; x++) {
 			for (int y = 0; y < SIZE; y++) {
 				squares[x][y] = new JPanel();
-				if ((x + y) % 2 == 0) {
+				if ((x + y) % 2 != 0) {
 	                squares[x][y].setBackground(Color.GRAY);
 	            } else {
 	                squares[x][y].setBackground(Color.WHITE);
@@ -86,7 +86,7 @@ public class UI {
 		
 		// creation du composant a afficher
 		JLabel pieceLabel = new JLabel(new ImageIcon(imageFile));
-		pieceLabel.setBounds((int) WIDTH*x, 350 - ((int) WIDTH*y), WIDTH, WIDTH);
+		pieceLabel.setBounds(x, y, WIDTH, WIDTH);
 		
 		pieces[x][y] = pieceLabel;
 		

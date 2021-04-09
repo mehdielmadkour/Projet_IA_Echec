@@ -1,12 +1,9 @@
 package chess;
 
+import chess.player.Player;
+
 import java.util.ArrayList;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
-import chess.player.Player;
-import chess.ui.UI;
 import chess.move.Move;
 import chess.piece.Bishop;
 import chess.piece.King;
@@ -85,6 +82,23 @@ public class Board {
 
 	public Cell[][] getGrid() {
 		return grid;
+	}
+	
+	public ArrayList<int[]> getPlayerPositions(int player){
+
+		ArrayList<int[]> playerPositions = new ArrayList<>();
+		
+		for (int x = 0; x < SIZE; x++)
+			for (int y = 0; y < SIZE; y++)
+				if (grid[x][y].isOccupied())
+					if (grid[x][y].getPiece().getPlayer() == player) {
+						int[] position = new int[2];
+						position[0] = x;
+						position[1] = y;
+						playerPositions.add(position);
+					}
+		
+		return playerPositions;
 	}
 
 	public String toString() {

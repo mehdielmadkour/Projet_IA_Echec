@@ -1,14 +1,8 @@
 package chess;
 
-import java.awt.Dimension;
-
-import javax.swing.JFrame;
-
-import chess.Board;
 import chess.player.AgentPlayer;
 import chess.player.HumanPlayer;
 import chess.player.Player;
-import chess.ui.UI;
 
 public class Chess {
 
