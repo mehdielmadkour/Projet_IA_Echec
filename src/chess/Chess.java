@@ -30,9 +30,9 @@ public class Chess {
 		Player agent = new AgentPlayer(Player.BLACK, board);
 
 		while (true){
-			board.print();
+			//board.print();
 			if (!human.play()) break;
-			board.print();
+			//board.print();
 			if (!agent.play()) break;				
 		}
 	}

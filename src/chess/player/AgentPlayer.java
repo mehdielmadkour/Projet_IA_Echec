@@ -12,10 +12,13 @@ import chess.piece.Piece;
 
 public class AgentPlayer extends Player {
 
+	private Minimax minimax;
+	
 	public AgentPlayer(int color, Board board){
 		setColor(color);
 		this.board = board;
 		evaluator = new Evaluator(this.color);
+		minimax = new Minimax(this);
 	}
 	
 	@Override
@@ -30,7 +33,7 @@ public class AgentPlayer extends Player {
 		this.board.movePiece(possibleMoves.get(n));
 		*/
 		
-		Move nextMove = Minimax.getNextMove(this);
+		Move nextMove = minimax.getNextMove();
 		
 		if (nextMove == null) return false;
 		

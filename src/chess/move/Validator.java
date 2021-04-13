@@ -252,6 +252,11 @@ public class Validator {
 		grid[move.xEnd][move.yEnd].setPiece(grid[move.xStart][move.yStart].getPiece());
 		grid[move.xStart][move.yStart].release();
 
+		return isCheck(player, grid);
+	}
+	
+	public static boolean isCheck(int player, Cell[][] grid) {
+
 		int[] kingPosition = new int[2];
 		for (int x = 0; x < grid.length; x++)
 			for (int y = 0; y < grid.length; y++)
@@ -293,6 +298,26 @@ public class Validator {
 					}
 		
 		return playerPositions;
+	}
+	
+	public static ArrayList<Move> getPossibleMoves(Cell[][] grid, int player, ArrayList<int[]> playerPositions){
+
+		ArrayList<Move> possibleMoves = new ArrayList<>();
+		
+		for (int[] position : playerPositions) {
+			
+			Piece piece = grid[position[0]][position[1]].getPiece();
+			
+			for (int x = 0; x < 8; x++)
+				for (int y = 0; y < 8; y++) {
+					Move move = new Move(position[0], x, position[1], y);
+					if (validateMove(move, player, copyGrid(grid))) {
+						possibleMoves.add(move);
+					}
+				}
+		}
+		
+		return possibleMoves;
 	}
 	
 	public static ArrayList<Move> getPossibleMoves(Cell[][] grid, int player){

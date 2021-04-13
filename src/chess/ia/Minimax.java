@@ -11,14 +11,20 @@ import chess.player.Player;
 
 public class Minimax {
 
-	private static int maxDepth = 3;
-	private static Evaluator evaluator;
-	private static int agentColor;
+	private int maxDepth = 3;
+	private Evaluator evaluator;
+	private int agentColor;
+	private Player player;
 	
-	public static Move getNextMove(Player player) {
-		
-		System.out.println("Calcule en cours");
+	public Minimax(Player player) {
 		evaluator = player.evaluator;
+		this.player = player;
+		agentColor = player.getColor();
+	}
+	
+	public Move getNextMove() {
+		
+		
 		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(player.getBoard().copyGrid(), player.getColor());
 		
 		Move move = null;
@@ -36,8 +42,6 @@ public class Minimax {
 			
 			int nextValue = minimax_alphaBeta(copy, 1, nextPlayer, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			
-			System.out.println(nextMove.toString() + " " + nextValue);
-			
 			if (nextValue == value) {
 				bestMoves.add(nextMove);
 			}
@@ -53,10 +57,12 @@ public class Minimax {
 		
 		move = bestMoves.get(n);
 		
+		System.out.println("best " + agentColor + " move : " + move.toString() + " : " + value);
+		
 		return move;
 	}
 	
-	private static int minimax(Cell[][] grid, int depth, int player) {
+	private int minimax(Cell[][] grid, int depth, int player) {
 		
 		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(grid, player);
 		
@@ -103,7 +109,7 @@ public class Minimax {
 		}
 	}
 	
-	private static int minimax_alphaBeta(Cell[][] grid, int depth, int player, int alpha, int beta) {
+	private int minimax_alphaBeta(Cell[][] grid, int depth, int player, int alpha, int beta) {
 		
 		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(grid, player);
 		
@@ -158,7 +164,7 @@ public class Minimax {
 		}
 	}
 	
-	private static Cell[][] play(Cell[][] grid, Move move){
+	private Cell[][] play(Cell[][] grid, Move move){
 		
 		Cell[][] copy = copyGrid(grid);
 		copy[move.xEnd][move.yEnd].setPiece((Piece) copy[move.xStart][move.yStart].getPiece().clone());
@@ -167,7 +173,7 @@ public class Minimax {
 		return copy;
 	}
 	
-	private static Cell[][] copyGrid(Cell[][] grid){
+	private Cell[][] copyGrid(Cell[][] grid){
 		
 		Cell[][] copy = new Cell[grid.length][grid.length];
 		

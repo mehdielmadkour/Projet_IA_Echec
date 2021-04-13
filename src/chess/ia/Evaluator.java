@@ -17,7 +17,7 @@ import chess.player.Player;
 
 public class Evaluator {
 
-	private int[] values = new int[7];
+	private int[] values = new int[9];
 	private int player;
 	private int agent;
 	
@@ -29,6 +29,8 @@ public class Evaluator {
 		values[4] = 100; // queen
 		values[5] = Integer.MAX_VALUE; // king
 		values[6] = 1; // coups possible
+		values[7] = -100; // partie nulle
+		values[8] = Integer.MAX_VALUE; // echec et mat
 		
 		this.agent = color;
 		
@@ -57,9 +59,13 @@ public class Evaluator {
 			
 		}
 		
-		//ArrayList<Move> possibleMoves = Validator.getPossibleMoves(grid, player); 
-		//score += values[6] * possibleMoves.size();
+		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(grid, player, playerPositions); 
+		score += values[6] * possibleMoves.size();
 		
+		if (possibleMoves.size() == 0) {
+			if (Validator.isCheck(this.player, grid)) score += values[8];
+			else score += values[7];
+		}
 		return score;
 	}
 	
