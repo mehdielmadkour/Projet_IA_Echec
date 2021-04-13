@@ -5,27 +5,31 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import chess.Board;
+import chess.UI;
 import chess.ia.Evaluator;
 import chess.move.Move;
 import chess.move.Validator;
+import chess.piece.King;
+import chess.piece.Piece;
 
 public class HumanPlayer extends Player {
 
-	public HumanPlayer(int color, Board board){
+	private UI ui;
+	private Move move= null;
+	
+	public HumanPlayer(int color, Board board, UI ui){
 		setColor(color);
 		this.board = board;
 		evaluator = new Evaluator(this.color);
+		this.ui = ui;
+		ui.setPlayer(this);
 	}
 
 	@Override
 	public boolean play() {
 		
-		//ArrayList<Move> possibleMoves = getPossibleMoves();
-		//if (possibleMoves.size() == 0) return false;
 		
-		Move move = null;
-		
-		do{
+		/*do{
 			System.out.println("Votre coup? <e2e4> ");
 			try {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -36,11 +40,18 @@ public class HumanPlayer extends Player {
 			catch (Exception e) {
 				System.out.println(e);
 			}
-		}
+		}*/
 		while(!Validator.validateMove(move, this.color, board.copyGrid()));
 		this.board.movePiece(move);
+		move = null;
 		
 		return true;
+	}
+
+	@Override
+	public void sendMove(Move move) {
+		this.move = move;
+		
 	}
 
 }

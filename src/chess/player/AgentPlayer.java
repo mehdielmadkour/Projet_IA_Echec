@@ -41,4 +41,10 @@ public class AgentPlayer extends Player {
 		return true;
 	}
 
+	@Override
+	public void sendMove(Move move) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

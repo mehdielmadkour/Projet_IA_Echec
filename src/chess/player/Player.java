@@ -19,6 +19,8 @@ public abstract class Player {
 
 	public abstract boolean play();
 	
+	public abstract void sendMove(Move move);
+	
 	public int getColor(){
 		return this.color;
 	}

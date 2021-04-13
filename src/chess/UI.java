@@ -3,6 +3,8 @@ package chess;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -26,8 +28,17 @@ public class UI {
 	private final int WIDTH = 50;
 	private JFrame frame; 
 	
-	private JPanel[][] squares= new JPanel[SIZE][SIZE];
+	private Square[][] squares= new Square[SIZE][SIZE];
 	private JLabel[][] pieces = new JLabel[SIZE][SIZE];
+	
+	private int mouseX = -1;
+	private int mouseY = -1;
+	private int startX = -1;
+	private int startY = -1;
+	private boolean pieceMoved = false;
+	private Move newMove = null;
+	
+	private Player player;
 	
 	public UI() {
 		
@@ -44,13 +55,8 @@ public class UI {
 		frame.setLayout(new GridLayout(SIZE, SIZE));
 		for (int x = 0; x < SIZE; x++) {
 			for (int y = 0; y < SIZE; y++) {
-				squares[x][y] = new JPanel();
-				if ((x + y) % 2 != 0) {
-	                squares[x][y].setBackground(Color.GRAY);
-	            } else {
-	                squares[x][y].setBackground(Color.WHITE);
-	            }   
-	            frame.add(squares[x][y]);
+				squares[x][y] = new Square(x, y, this);
+				frame.add(squares[x][y]);
 			}
 	    }
 	}
@@ -98,22 +104,56 @@ public class UI {
 	
 	public void movePiece(Move move) {
 		
-		JPanel startPanel = squares[SIZE - move.yStart - 1][move.xStart];
-		JPanel endPanel = squares[SIZE - move.yEnd - 1][move.xEnd];
-		
+		Square startSquare = squares[SIZE - move.yStart - 1][move.xStart];
+		Square endSquare = squares[SIZE - move.yEnd - 1][move.xEnd];
 		
 		JLabel startPiece = pieces[move.xStart][move.yStart];
 		JLabel endPiece = pieces[move.xEnd][move.yEnd];
 		
 		
-		startPanel.remove(startPiece);
-		if (endPiece != null ) endPanel.remove(endPiece);
-		endPanel.add(startPiece);
+		startSquare.remove(startPiece);
+		if (endPiece != null ) endSquare.remove(endPiece);
+		endSquare.add(startPiece);
 		
-		startPanel.updateUI();
-		endPanel.updateUI();
+		startSquare.updateUI();
+		endSquare.updateUI();
 
 		pieces[move.xEnd][move.yEnd] = startPiece;
 		pieces[move.xStart][move.yStart] = null;
+	}
+	
+	void selectPiece(int x, int y) {
+		startX = x;
+		startY = y;
+	}
+	
+	void moveMouse(int x, int y) {
+		mouseX = x;
+		mouseY = y;
+		
+	}
+	
+	void releasePiece() {
+		pieceMoved = true;
+		newMove = new Move(startX, mouseX, startY, mouseY);
+		System.out.println(newMove.toString());
+		player.sendMove(newMove);
+	}
+	
+	public boolean moveAvailable() {
+		return pieceMoved;
+	}
+	
+	public Move getMove() {
+		if (pieceMoved) {
+			pieceMoved = false;
+			return newMove;
+		}
+		
+		return null;
+	}
+	
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }

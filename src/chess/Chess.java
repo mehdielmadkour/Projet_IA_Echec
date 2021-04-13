@@ -7,10 +7,11 @@ import chess.player.Player;
 public class Chess {
 
 	protected Board board;
-
+	private UI ui;
+	
 	public Chess() {
 
-		UI ui = new UI();
+		ui = new UI();
 		board = new Board(ui);
 
 	}
@@ -26,7 +27,7 @@ public class Chess {
 
 
 	private void start() {
-		Player human = new HumanPlayer(Player.WHITE, board);
+		Player human = new HumanPlayer(Player.WHITE, board, ui);
 		Player agent = new AgentPlayer(Player.BLACK, board);
 
 		while (true){

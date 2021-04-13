@@ -81,7 +81,7 @@ public class Board {
 		Piece piece = grid[move.xStart][move.yStart].getPiece();
 		if (piece instanceof King) {
 			if (((King) piece).rockPossible(move, grid)) {
-				System.out.println("roque possible");
+				
 				Move move1 = ((King) piece).getRockMove(move);
 				grid[move1.xEnd][move1.yEnd].setPiece(grid[move1.xStart][move1.yStart].getPiece());
 				grid[move1.xStart][move1.yStart].release();

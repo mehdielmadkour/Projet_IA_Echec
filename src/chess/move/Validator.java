@@ -16,9 +16,14 @@ public class Validator {
 
 	public static boolean validateMove(Move move, int player, Cell[][] grid) {
 		
-		if (isPossible(move, player, grid)) 
-			if (!wouldBeCheck(player, move, grid))
+		if (move == null) return false;
+		
+		if (isPossible(move, player, grid)) {
+			if (!wouldBeCheck(player, move, grid)) {
 				return true;
+			}
+			
+		}
 		return false;
 	}
 
@@ -64,8 +69,8 @@ public class Validator {
 	}
 	
 	// le mouvement est possible pour la piece déplacee
-	private static boolean canMove(Cell[][] grid, Move move) {
-		
+	public static boolean canMove(Cell[][] grid, Move move) {
+
 		Piece piece = grid[move.xStart][move.yStart].getPiece();
 		
 		return piece.canMove(move, grid);
