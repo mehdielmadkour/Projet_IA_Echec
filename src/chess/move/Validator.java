@@ -68,73 +68,7 @@ public class Validator {
 		
 		Piece piece = grid[move.xStart][move.yStart].getPiece();
 		
-		if (piece instanceof Bishop) return bishopCanMove(move);
-		if (piece instanceof King) return kingCanMove(move);
-		if (piece instanceof Knight) return knightCanMove(move);
-		if (piece instanceof Queen) return queenCanMove(move);
-		if (piece instanceof Rook) return rookCanMove(move);
-		if (piece instanceof Pawn) {
-			if (piece.getPlayer() == Player.WHITE) return whitePawnCanMove(grid, move);
-			if (piece.getPlayer() == Player.BLACK) return blackPawnCanMove(grid, move);
-		}
-		return false;
-	}
-	
-	private static boolean bishopCanMove(Move move) {
-		
-		// deplacement diagonale
-		return Math.abs(move.xEnd - move.xStart) == Math.abs(move.yEnd - move.yStart);
-	}
-	
-	private static boolean kingCanMove(Move move) {
-		
-		// deplacement d'une case
-		return Math.abs(move.xEnd - move.xStart) <= 1 && Math.abs(move.yEnd - move.yStart) <= 1;
-	}
-	
-	private static boolean knightCanMove(Move move) {
-		
-		// deplacement du cavalier
-		return (Math.abs(move.xEnd - move.xStart) == 1 && Math.abs(move.yEnd - move.yStart) == 2)
-				|| (Math.abs(move.xEnd - move.xStart) == 2 && Math.abs(move.yEnd - move.yStart) == 1);
-	}
-	
-	private static boolean whitePawnCanMove(Cell[][] grid, Move move) {
-		
-		// mange une piece noire
-		if ((move.xEnd == move.xStart + 1 || move.xEnd == move.xStart - 1) && move.yEnd - move.yStart == 1)
-			if (grid[move.xEnd][move.yEnd].isOccupied())
-				return grid[move.xEnd][move.yEnd].getPiece().getPlayer() == Player.BLACK;
-		
-		// avance d'une case ou de deux case au premier deplacement
-		return (move.xEnd == move.xStart && move.yEnd - move.yStart == 1
-				|| move.xEnd == move.xStart && move.yStart == 1 && move.yEnd == 3)
-				&& !grid[move.xEnd][move.yEnd].isOccupied();
-	}
-	
-	private static boolean blackPawnCanMove(Cell[][] grid, Move move) {
-		
-		// mange une piece blanche
-		if ((move.xEnd == move.xStart + 1 || move.xEnd == move.xStart - 1) && move.yEnd - move.yStart == -1)
-			if (grid[move.xEnd][move.yEnd].isOccupied())
-				return grid[move.xEnd][move.yEnd].getPiece().getPlayer() == Player.WHITE;
-		
-		// avance d'une case ou de deux case au premier deplacement
-		return (move.xEnd == move.xStart && move.yEnd - move.yStart == -1
-				|| move.xEnd == move.xStart && move.yStart == 6 && move.yEnd == 4)
-				&& !grid[move.xEnd][move.yEnd].isOccupied();
-	}
-	
-	private static boolean queenCanMove(Move move) {
-		
-		// deplacement diagonale, horizontale ou verticale
-		return rookCanMove(move) || bishopCanMove(move);
-	}
-	
-	private static boolean rookCanMove(Move move) {
-		
-		// deplacement horizontale ou verticale
-		return move.xEnd == move.xStart || move.yEnd == move.yStart;
+		return piece.canMove(move, grid);
 	}
 	
 	// la piece deplace est un cavalier ou ne passe pas au dessus d'une autre piece
@@ -148,9 +82,7 @@ public class Validator {
 			Cell[] path;
 			
 			// recupere le parcours de la piece
-			if (piece instanceof Bishop) path = getBishopPath(grid, move);
-			else if (piece instanceof Rook) path = getRookPath(grid, move);
-			else path = getQueenPath(grid, move);
+			path = piece.getPath(move, grid);
 			
 			// teste la presence d'une piece sur le parcours
 			for (Cell cell : path) {
@@ -161,98 +93,14 @@ public class Validator {
 		return false;
 	}
 	
-	private static Cell[] getBishopPath(Cell[][] grid, Move move) {
-		
-		// distance a parcourir
-		int n = Math.abs(move.xEnd - move.xStart);
-
-		Cell[] path = new Cell[n-1];
-		
-		// parcours la diagonale correspondant au déplacement parmis les quatre directions possible
-		if (move.xEnd > move.xStart && move.yEnd > move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart + i][move.yStart + i];
-		}
-		if (move.xEnd > move.xStart && move.yEnd < move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart + i][move.yStart - i];
-		}
-		if (move.xEnd < move.xStart && move.yEnd > move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart - i][move.yStart + i];
-		}
-		if (move.xEnd < move.xStart && move.yEnd < move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart - i][move.yStart - i];
-		}
-		
-		return path;
-	}
-	
-	private static Cell[] getRookPath(Cell[][] grid, Move move) {
-		
-		// distance a parcourir
-		int n = Math.max(Math.abs(move.xEnd - move.xStart), Math.abs(move.yEnd - move.yStart));
-		
-		Cell[] path = new Cell[n-1];
-		
-		// parcours la ligne ou la colonne correspondant au déplacement parmis les quatre directions possible
-		if (move.xEnd > move.xStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart + i][move.yStart];
-		}
-		if (move.xEnd < move.xStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart - i][move.yStart];
-		}
-		if (move.yEnd > move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart][move.yStart + i];
-		}
-		if (move.yEnd < move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart][move.yStart - i];
-		}
-		
-		return path;
-	}
-	
-	private static Cell[] getQueenPath(Cell[][] grid, Move move) {
-		
-		// distance a parcourir
-		int n = Math.max(Math.abs(move.xEnd - move.xStart), Math.abs(move.yEnd - move.yStart));
-		
-		Cell[] path = new Cell[n-1];
-		
-		// parcours la ligne ou la colonne correspondant au déplacement parmis les quatre directions possible
-		if (move.xEnd > move.xStart && move.yEnd == move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart + i][move.yStart];
-		}
-		if (move.xEnd < move.xStart && move.yEnd == move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart - i][move.yStart];
-		}
-		if (move.yEnd > move.yStart && move.xEnd == move.xStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart][move.yStart + i];
-		}
-		if (move.yEnd < move.yStart && move.xEnd == move.xStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart][move.yStart - i];
-		}
-		
-		// parcours la diagonale correspondant au déplacement parmis les quatre directions possible
-		if (move.xEnd > move.xStart && move.yEnd > move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart + i][move.yStart + i];
-		}
-		if (move.xEnd > move.xStart && move.yEnd < move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart + i][move.yStart - i];
-		}
-		if (move.xEnd < move.xStart && move.yEnd > move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart - i][move.yStart + i];
-		}
-		if (move.xEnd < move.xStart && move.yEnd < move.yStart) {
-			for (int i = 1; i < n; i++) path[i-1] = grid[move.xStart - i][move.yStart - i];
-		}
-		
-		return path;
-	}
-	
 	private static boolean wouldBeCheck(int player, Move move, Cell[][] grid) {
 		
-		grid[move.xEnd][move.yEnd].setPiece(grid[move.xStart][move.yStart].getPiece());
-		grid[move.xStart][move.yStart].release();
+		Cell[][] copy = copyGrid(grid);
+		
+		copy[move.xEnd][move.yEnd].setPiece(grid[move.xStart][move.yStart].getPiece());
+		copy[move.xStart][move.yStart].release();
 
-		return isCheck(player, grid);
+		return isCheck(player, copy);
 	}
 	
 	public static boolean isCheck(int player, Cell[][] grid) {
@@ -306,12 +154,10 @@ public class Validator {
 		
 		for (int[] position : playerPositions) {
 			
-			Piece piece = grid[position[0]][position[1]].getPiece();
-			
 			for (int x = 0; x < 8; x++)
 				for (int y = 0; y < 8; y++) {
 					Move move = new Move(position[0], x, position[1], y);
-					if (validateMove(move, player, copyGrid(grid))) {
+					if (validateMove(move, player, grid)) {
 						possibleMoves.add(move);
 					}
 				}
@@ -328,12 +174,10 @@ public class Validator {
 		
 		for (int[] position : playerPositions) {
 			
-			Piece piece = grid[position[0]][position[1]].getPiece();
-			
 			for (int x = 0; x < 8; x++)
 				for (int y = 0; y < 8; y++) {
 					Move move = new Move(position[0], x, position[1], y);
-					if (validateMove(move, player, copyGrid(grid))) {
+					if (validateMove(move, player, grid)) {
 						possibleMoves.add(move);
 					}
 				}

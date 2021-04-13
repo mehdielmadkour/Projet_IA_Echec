@@ -26,7 +26,7 @@ public class Chess {
 
 
 	private void start() {
-		Player human = new HumanPlayer(Player.WHITE, board);
+		Player human = new AgentPlayer(Player.WHITE, board);
 		Player agent = new AgentPlayer(Player.BLACK, board);
 
 		while (true){

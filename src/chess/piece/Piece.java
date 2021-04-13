@@ -1,6 +1,9 @@
 package chess.piece;
 
-import chess.player.Player;
+import java.util.ArrayList;
+
+import chess.Cell;
+import chess.move.Move;
 
 public abstract class Piece {
 	protected int player;
@@ -18,6 +21,9 @@ public abstract class Piece {
     }
 
     public abstract String toString();
+
+    public abstract boolean canMove(Move move, Cell[][] grid);
+    public abstract Cell[] getPath(Move move, Cell[][] grid);
     
     public void print(){
             System.out.println(this.toString()); 
