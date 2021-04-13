@@ -93,9 +93,18 @@ public class Validator {
 		return false;
 	}
 	
-	private static boolean wouldBeCheck(int player, Move move, Cell[][] grid) {
+	public static boolean wouldBeCheck(int player, Move move, Cell[][] grid) {
 		
 		Cell[][] copy = copyGrid(grid);
+		
+		Piece piece = copy[move.xStart][move.yStart].getPiece();
+		if (piece instanceof King) {
+			if (((King) piece).rockPossible(move, copy)) {
+				Move move1 = ((King) piece).getRockMove(move);
+				copy[move1.xEnd][move1.yEnd].setPiece(copy[move1.xStart][move1.yStart].getPiece());
+				copy[move1.xStart][move1.yStart].release();
+			}
+		}
 		
 		copy[move.xEnd][move.yEnd].setPiece(grid[move.xStart][move.yStart].getPiece());
 		copy[move.xStart][move.yStart].release();

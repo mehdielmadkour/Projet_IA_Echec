@@ -28,9 +28,8 @@ public class Pawn extends Piece {
 			
 			// avance d'une case ou de deux case au premier deplacement
 			return (move.xEnd == move.xStart && move.yEnd - move.yStart == 1
-					|| move.xEnd == move.xStart && move.yStart == 1 && move.yEnd == 3)
-					&& !grid[move.xEnd][3].isOccupied()
-					&& !grid[move.xEnd][2].isOccupied();
+					|| move.xEnd == move.xStart && move.yStart == 1 && move.yEnd == 3 && !grid[move.xEnd][2].isOccupied())
+					&& !grid[move.xEnd][move.yEnd].isOccupied();
 		}
 		else {
 			
@@ -41,9 +40,8 @@ public class Pawn extends Piece {
 			
 			// avance d'une case ou de deux case au premier deplacement
 			return (move.xEnd == move.xStart && move.yEnd - move.yStart == -1
-					|| move.xEnd == move.xStart && move.yStart == 6 && move.yEnd == 4)
-					&& !grid[move.xEnd][4].isOccupied()
-					&& !grid[move.xEnd][5].isOccupied();
+					|| move.xEnd == move.xStart && move.yStart == 6 && move.yEnd == 4 && !grid[move.xEnd][5].isOccupied())
+					&& !grid[move.xEnd][move.yEnd].isOccupied();
 		}
 	}
 

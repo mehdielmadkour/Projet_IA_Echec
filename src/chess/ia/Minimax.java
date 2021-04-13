@@ -6,6 +6,7 @@ import java.util.Random;
 import chess.Cell;
 import chess.move.Move;
 import chess.move.Validator;
+import chess.piece.King;
 import chess.piece.Piece;
 import chess.player.Player;
 
@@ -51,6 +52,8 @@ public class Minimax {
 				value = nextValue;
 			}
 		}
+		
+		if (bestMoves.size() == 0) return null;
 		
 		Random rand = new Random();
 		int n = rand.nextInt(bestMoves.size());
@@ -167,6 +170,15 @@ public class Minimax {
 	private Cell[][] play(Cell[][] grid, Move move){
 		
 		Cell[][] copy = copyGrid(grid);
+		
+		Piece piece = copy[move.xStart][move.yStart].getPiece();
+		if (piece instanceof King) {
+			if (((King) piece).rockPossible(move, copy)) {
+				Move move1 = ((King) piece).getRockMove(move);
+				copy = play(copy, move1);
+			}
+		}
+				
 		copy[move.xEnd][move.yEnd].setPiece((Piece) copy[move.xStart][move.yStart].getPiece().clone());
 		copy[move.xStart][move.yStart].release();
 		

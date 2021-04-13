@@ -27,10 +27,10 @@ public class Evaluator {
 		values[2] = 30; // bishop
 		values[3] = 50; // rook
 		values[4] = 100; // queen
-		values[5] = Integer.MAX_VALUE; // king
+		values[5] = Integer.MAX_VALUE / 2; // king
 		values[6] = 1; // coups possible
 		values[7] = -100; // partie nulle
-		values[8] = Integer.MAX_VALUE; // echec et mat
+		values[8] = Integer.MAX_VALUE / 2; // echec et mat
 		
 		this.agent = color;
 		
@@ -63,8 +63,8 @@ public class Evaluator {
 		score += values[6] * possibleMoves.size();
 		
 		if (possibleMoves.size() == 0) {
-			if (Validator.isCheck(this.player, grid)) score += values[8];
-			else score += values[7];
+			if (Validator.isCheck(this.player, grid)) score -= values[8];
+			else score -= values[7];
 		}
 		return score;
 	}
