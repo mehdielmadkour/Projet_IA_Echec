@@ -85,12 +85,14 @@ public class Board {
 				Move move1 = ((King) piece).getRockMove(move);
 				grid[move1.xEnd][move1.yEnd].setPiece(grid[move1.xStart][move1.yStart].getPiece());
 				grid[move1.xStart][move1.yStart].release();
+				grid[move1.xEnd][move1.yEnd].getPiece().hasMoved = true;
 				ui.movePiece(move1);
 			}
 		}
 		
 		grid[move.xEnd][move.yEnd].setPiece(grid[move.xStart][move.yStart].getPiece());
 		grid[move.xStart][move.yStart].release();
+		grid[move.xEnd][move.yEnd].getPiece().hasMoved = true;
 		ui.movePiece(move);
 	}
 

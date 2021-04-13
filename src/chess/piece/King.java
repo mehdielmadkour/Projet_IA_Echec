@@ -38,6 +38,9 @@ public class King extends Piece {
 			if (grid[5][move.yEnd].isOccupied() || grid[6][move.yEnd].isOccupied()) 
 				return false;
 			
+			if (grid[move.xStart][move.yStart].getPiece().hasMoved = true) return false;
+			if (grid[7][move.yStart].getPiece().hasMoved = true) return false;
+			
 			Move move1 = new Move(move.xStart, 5, move.yStart, move.yEnd);
 			
 			//if (Validator.wouldBeCheck(player, move, grid)) return false;
@@ -53,6 +56,9 @@ public class King extends Piece {
 			
 			if (grid[1][move.yEnd].isOccupied() || grid[2][move.yEnd].isOccupied() || grid[3][move.yEnd].isOccupied()) 
 				return false;
+			
+			if (grid[move.xStart][move.yStart].getPiece().hasMoved = true) return false;
+			if (grid[0][move.yStart].getPiece().hasMoved = true) return false;
 			
 			Move move1 = new Move(move.xStart, 3, move.yStart, move.yEnd);
 			

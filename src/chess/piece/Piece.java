@@ -1,12 +1,11 @@
 package chess.piece;
 
-import java.util.ArrayList;
-
 import chess.Cell;
 import chess.move.Move;
 
 public abstract class Piece {
 	protected int player;
+	public boolean hasMoved = false;
     
     public Piece(int player) {
     	setPlayer(player);
