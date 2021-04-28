@@ -9,8 +9,13 @@ public class Gene {
 	
 	public Gene(float value) {
 		
+		this.value = value;
+	}
+	
+	public Gene() {
+		
 		Random rand = new Random();
-		this.value = value + rand.nextFloat() * value;
+		this.value = value + rand.nextFloat() * 2000000 - 1000000;
 	}
 	
 	// algorithme BLX-alpha

@@ -13,7 +13,7 @@ import chess.player.Player;
 
 public class Minimax {
 
-	private int maxDepth = 3;
+	private int maxDepth = 2;
 	private Evaluator evaluator;
 	private int agentColor;
 	private Player player;
@@ -30,7 +30,7 @@ public class Minimax {
 		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(player.getBoard().copyGrid(), player.getColor());
 		
 		Move move = null;
-		float value = Float.MIN_VALUE;
+		float value = Integer.MIN_VALUE;
 		
 		int nextPlayer;
 		if (agentColor == Player.WHITE) nextPlayer = Player.BLACK;
@@ -42,8 +42,8 @@ public class Minimax {
 			
 			Cell[][] copy = play(player.getBoard().copyGrid(), nextMove);
 			
-			float nextValue = minimax_alphaBeta(copy, 1, nextPlayer, Float.MIN_VALUE, Float.MAX_VALUE);
-			
+			float nextValue = minimax_alphaBeta(copy, 1, nextPlayer, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
 			if (nextValue == value) {
 				bestMoves.add(nextMove);
 			}
@@ -53,7 +53,7 @@ public class Minimax {
 				value = nextValue;
 			}
 		}
-		
+
 		if (bestMoves.size() == 0) return null;
 		
 		Random rand = new Random();

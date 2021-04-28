@@ -156,4 +156,8 @@ public class UI {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
+	
+	public void close() {
+		frame.dispose();
+	}
 }

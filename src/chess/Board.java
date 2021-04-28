@@ -34,46 +34,46 @@ public class Board {
 
 		for (int x = 0; x < SIZE; x++) {
 			grid[x][1].setPiece(new Pawn(Player.WHITE));
-			ui.addPiece(new Pawn(Player.WHITE), x, 1);
+			if (ui != null) ui.addPiece(new Pawn(Player.WHITE), x, 1);
 			
 			grid[x][6].setPiece(new Pawn(Player.BLACK));
-			ui.addPiece(new Pawn(Player.BLACK), x, 6);
+			if (ui != null) ui.addPiece(new Pawn(Player.BLACK), x, 6);
 		}
 		for (int x = 2; x < 8; x += 3) {
 			grid[x][0].setPiece(new Bishop(Player.WHITE));
-			ui.addPiece(new Bishop(Player.WHITE), x, 0);
+			if (ui != null) ui.addPiece(new Bishop(Player.WHITE), x, 0);
 			
 			grid[x][7].setPiece(new Bishop(Player.BLACK));
-			ui.addPiece(new Bishop(Player.BLACK), x, 7);
+			if (ui != null) ui.addPiece(new Bishop(Player.BLACK), x, 7);
 		}
 
 		for (int x = 1; x < 8; x += 5) {
 			grid[x][0].setPiece(new Knight(Player.WHITE));
-			ui.addPiece(new Knight(Player.WHITE), x, 0);
+			if (ui != null) ui.addPiece(new Knight(Player.WHITE), x, 0);
 			
 			grid[x][7].setPiece(new Knight(Player.BLACK));
-			ui.addPiece(new Knight(Player.BLACK), x, 7);
+			if (ui != null) ui.addPiece(new Knight(Player.BLACK), x, 7);
 		}
 
 		for (int x = 0; x < 8; x += 7) {
 			grid[x][0].setPiece(new Rook(Player.WHITE));
-			ui.addPiece(new Rook(Player.WHITE), x, 0);
+			if (ui != null) ui.addPiece(new Rook(Player.WHITE), x, 0);
 			
 			grid[x][7].setPiece(new Rook(Player.BLACK));
-			ui.addPiece(new Rook(Player.BLACK), x, 7);
+			if (ui != null) ui.addPiece(new Rook(Player.BLACK), x, 7);
 		}
 
 		grid[3][0].setPiece(new Queen(Player.WHITE));
-		ui.addPiece(new Queen(Player.WHITE), 3, 0);
+		if (ui != null) ui.addPiece(new Queen(Player.WHITE), 3, 0);
 		
 		grid[3][7].setPiece(new Queen(Player.BLACK));
-		ui.addPiece(new Queen(Player.BLACK), 3, 7);
+		if (ui != null) ui.addPiece(new Queen(Player.BLACK), 3, 7);
 
 		grid[4][0].setPiece(new King(Player.WHITE));
-		ui.addPiece(new King(Player.WHITE), 4, 0);
+		if (ui != null) ui.addPiece(new King(Player.WHITE), 4, 0);
 		
 		grid[4][7].setPiece(new King(Player.BLACK));
-		ui.addPiece(new King(Player.BLACK), 4, 7);
+		if (ui != null) ui.addPiece(new King(Player.BLACK), 4, 7);
 	}
 
 	public void movePiece(Move move) {
@@ -86,14 +86,14 @@ public class Board {
 				grid[move1.xEnd][move1.yEnd].setPiece(grid[move1.xStart][move1.yStart].getPiece());
 				grid[move1.xStart][move1.yStart].release();
 				grid[move1.xEnd][move1.yEnd].getPiece().hasMoved = true;
-				ui.movePiece(move1);
+				if (ui != null) ui.movePiece(move1);
 			}
 		}
 		
 		grid[move.xEnd][move.yEnd].setPiece(grid[move.xStart][move.yStart].getPiece());
 		grid[move.xStart][move.yStart].release();
 		grid[move.xEnd][move.yEnd].getPiece().hasMoved = true;
-		ui.movePiece(move);
+		if (ui != null) ui.movePiece(move);
 	}
 
 	public Cell[][] getGrid() {
@@ -142,5 +142,9 @@ public class Board {
 			}
 		
 		return copy;
+	}
+	
+	public void close() {
+		if (ui != null) ui.close();
 	}
 }
