@@ -24,15 +24,6 @@ public class AgentPlayer extends Player {
 	@Override
 	public boolean play() {
 		
-		/*ArrayList<Move> possibleMoves = Validator.getPossibleMoves(board.copyGrid(), color);
-		if (possibleMoves.size() == 0) return false;
-		
-		Random rand = new Random();
-		int n = rand.nextInt(possibleMoves.size());
-		
-		this.board.movePiece(possibleMoves.get(n));
-		*/
-		
 		Move nextMove = minimax.getNextMove();
 		
 		if (nextMove == null) return false;
