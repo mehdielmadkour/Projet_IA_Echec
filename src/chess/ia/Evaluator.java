@@ -17,20 +17,13 @@ import chess.player.Player;
 
 public class Evaluator {
 
-	private int[] values = new int[9];
+	private float[] values = new float[9];
 	private int player;
 	private int agent;
 	
-	public Evaluator(int color) {
-		values[0] = 10; // pawn
-		values[1] = 30; // knight
-		values[2] = 30; // bishop
-		values[3] = 50; // rook
-		values[4] = 100; // queen
-		values[5] = Integer.MAX_VALUE / 2; // king
-		values[6] = 1; // coups possible
-		values[7] = -100; // partie nulle
-		values[8] = Integer.MAX_VALUE / 2; // echec et mat
+	public Evaluator(int color, Genome genome) {
+		
+		for (int i = 0; i < 9; i++) values[i] = genome.getGene(i).getValue();
 		
 		this.agent = color;
 		
@@ -40,9 +33,9 @@ public class Evaluator {
 		
 	}
 	
-	public int evaluate(Cell[][] grid, int player) {
+	public float evaluate(Cell[][] grid, int player) {
 		
-		int score = 0;
+		float score = 0;
 		
 		ArrayList<int[]> playerPositions = Validator.getPlayerPositions(player, grid);
 		
@@ -56,7 +49,6 @@ public class Evaluator {
 			if (piece instanceof Rook) score += values[3];
 			if (piece instanceof Queen) score += values[4];
 			if (piece instanceof King) score += values[5];
-			
 		}
 		
 		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(grid, player, playerPositions); 
@@ -69,11 +61,11 @@ public class Evaluator {
 		return score;
 	}
 	
-	public int evaluate(Cell[][] grid) {
+	public float evaluate(Cell[][] grid) {
 		
-		int playerScore = evaluate(grid, player);
-		int agentScore = evaluate(grid, agent);
-		
+		float playerScore = evaluate(grid, player);
+		float agentScore = evaluate(grid, agent);
+
 		return agentScore - playerScore;
 	}
 }

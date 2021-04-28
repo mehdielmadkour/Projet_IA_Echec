@@ -8,6 +8,7 @@ import chess.move.Move;
 import chess.move.Validator;
 import chess.piece.King;
 import chess.piece.Piece;
+import chess.player.AgentPlayer;
 import chess.player.Player;
 
 public class Minimax {
@@ -17,7 +18,7 @@ public class Minimax {
 	private int agentColor;
 	private Player player;
 	
-	public Minimax(Player player) {
+	public Minimax(AgentPlayer player) {
 		evaluator = player.evaluator;
 		this.player = player;
 		agentColor = player.getColor();
@@ -29,7 +30,7 @@ public class Minimax {
 		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(player.getBoard().copyGrid(), player.getColor());
 		
 		Move move = null;
-		int value = Integer.MIN_VALUE;
+		float value = Float.MIN_VALUE;
 		
 		int nextPlayer;
 		if (agentColor == Player.WHITE) nextPlayer = Player.BLACK;
@@ -41,7 +42,7 @@ public class Minimax {
 			
 			Cell[][] copy = play(player.getBoard().copyGrid(), nextMove);
 			
-			int nextValue = minimax_alphaBeta(copy, 1, nextPlayer, Integer.MIN_VALUE, Integer.MAX_VALUE);
+			float nextValue = minimax_alphaBeta(copy, 1, nextPlayer, Float.MIN_VALUE, Float.MAX_VALUE);
 			
 			if (nextValue == value) {
 				bestMoves.add(nextMove);
@@ -60,12 +61,10 @@ public class Minimax {
 		
 		move = bestMoves.get(n);
 		
-		System.out.println("best " + agentColor + " move : " + move.toString() + " : " + value);
-		
 		return move;
 	}
 	
-	private int minimax(Cell[][] grid, int depth, int player) {
+	/*private int minimax(Cell[][] grid, int depth, int player) {
 		
 		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(grid, player);
 		
@@ -110,9 +109,9 @@ public class Minimax {
 			
 			return value;
 		}
-	}
+	}*/
 	
-	private int minimax_alphaBeta(Cell[][] grid, int depth, int player, int alpha, int beta) {
+	private float minimax_alphaBeta(Cell[][] grid, int depth, int player, float alpha, float beta) {
 		
 		ArrayList<Move> possibleMoves = Validator.getPossibleMoves(grid, player);
 		
@@ -125,13 +124,13 @@ public class Minimax {
 		
 		if (agentColor == player) {
 			
-			int value = Integer.MIN_VALUE;
+			float value = Integer.MIN_VALUE;
 			
 			for (Move nextMove : possibleMoves) {
 				
 				Cell[][] nextGrid = play(grid, nextMove);
 				
-				int nextValue = minimax_alphaBeta(nextGrid, depth + 1, nextPlayer, alpha, beta);
+				float nextValue = minimax_alphaBeta(nextGrid, depth + 1, nextPlayer, alpha, beta);
 				
 				if (nextValue > value) {
 					value = nextValue;
@@ -146,13 +145,13 @@ public class Minimax {
 		}
 		else {
 			
-			int value = Integer.MAX_VALUE;
+			float value = Integer.MAX_VALUE;
 			
 			for (Move nextMove : possibleMoves) {
 				
 				Cell[][] nextGrid = play(grid, nextMove);
 				
-				int nextValue = minimax_alphaBeta(nextGrid, depth + 1, nextPlayer, alpha, beta);
+				float nextValue = minimax_alphaBeta(nextGrid, depth + 1, nextPlayer, alpha, beta);
 				
 				if (nextValue < value) {
 					value = nextValue;

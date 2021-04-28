@@ -20,7 +20,6 @@ public class HumanPlayer extends Player {
 	public HumanPlayer(int color, Board board, UI ui){
 		setColor(color);
 		this.board = board;
-		evaluator = new Evaluator(this.color);
 		this.ui = ui;
 		ui.setPlayer(this);
 	}

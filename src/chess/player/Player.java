@@ -15,7 +15,6 @@ public abstract class Player {
 	
 	protected int color;
 	protected Board board;
-	public Evaluator evaluator;
 
 	public abstract boolean play();
 	
